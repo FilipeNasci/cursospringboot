@@ -13,6 +13,7 @@ import com.filipe.appspring.domain.Cidade;
 import com.filipe.appspring.domain.Cliente;
 import com.filipe.appspring.domain.Endereco;
 import com.filipe.appspring.domain.Estado;
+import com.filipe.appspring.domain.ItemPedido;
 import com.filipe.appspring.domain.Pagamento;
 import com.filipe.appspring.domain.PagamentoComBoleto;
 import com.filipe.appspring.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import com.filipe.appspring.repositories.CidadeRepository;
 import com.filipe.appspring.repositories.ClienteRepository;
 import com.filipe.appspring.repositories.EnderecoRepository;
 import com.filipe.appspring.repositories.EstadoRepository;
+import com.filipe.appspring.repositories.ItemPedidoRepository;
 import com.filipe.appspring.repositories.PagamentoRepository;
 import com.filipe.appspring.repositories.PedidoRepository;
 import com.filipe.appspring.repositories.ProdutoRepository;
@@ -55,6 +57,8 @@ public class AppspringApplication implements CommandLineRunner {
 	
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired ItemPedidoRepository itemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(AppspringApplication.class, args);
@@ -117,6 +121,19 @@ public class AppspringApplication implements CommandLineRunner {
 		
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
+		
+		ItemPedido ip1 = new ItemPedido(ped1, prod1, 0.0, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, prod3, 0.0, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, prod2, 100.0, 1, 800.00);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		prod1.getItens().addAll(Arrays.asList(ip1));
+		prod2.getItens().addAll(Arrays.asList(ip3));
+		prod3.getItens().addAll(Arrays.asList(ip2));
+		
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 	}
 	
 }
