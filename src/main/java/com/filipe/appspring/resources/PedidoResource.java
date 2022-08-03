@@ -18,7 +18,7 @@ public class PedidoResource {
 	private PedidoService service;
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<?> listar(@PathVariable Integer id) {
+	public ResponseEntity<Pedido> listar(@PathVariable Integer id) {
 		Pedido categoria = service.buscar(id);
 		
 		return ResponseEntity.ok().body(categoria);
