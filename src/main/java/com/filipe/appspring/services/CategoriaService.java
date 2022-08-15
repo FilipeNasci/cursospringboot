@@ -11,7 +11,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.filipe.appspring.domain.Categoria;
-import com.filipe.appspring.domain.Cliente;
 import com.filipe.appspring.dto.CategoriaDTO;
 import com.filipe.appspring.repositories.CategoriaRepository;
 import com.filipe.appspring.services.exceptions.DataIntegrityException;
