@@ -12,20 +12,20 @@ public class CategoriaDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
-	
+
 	@NotEmpty(message = "Preenchimento obrigatório")
 	@Length(min = 3, max = 50, message = "O tamanho deve ser entre 3 e 50 caracteres")
 	private String nome;
-	
+
 	public CategoriaDTO() {
-		
+
 	}
-	
-public CategoriaDTO(Categoria categoria) {
+
+	public CategoriaDTO(Categoria categoria) {
 		this.id = categoria.getId();
 		this.nome = categoria.getNome();
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -38,5 +38,5 @@ public CategoriaDTO(Categoria categoria) {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
+
 }
