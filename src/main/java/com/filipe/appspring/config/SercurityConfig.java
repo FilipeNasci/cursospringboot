@@ -19,22 +19,23 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.filipe.appspring.security.JWTAuthenticationFilter;
+import com.filipe.appspring.security.JWTAuthorizationFilter;
 import com.filipe.appspring.security.JWTUtil;
 
 @SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
 public class SercurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	@Autowired
 	private Environment env;
-	
+
 	@Autowired
 	private UserDetailsService userDetailsService;
-	
+
 	@Autowired
 	private JWTUtil jwtUtil;
-	
+
 	private static final String[] PUBLIC_MATCHERS = {
 			"/h2-console/**",
 	};	
@@ -43,7 +44,7 @@ public class SercurityConfig extends WebSecurityConfigurerAdapter {
 			"/produtos/**",
 			"/categorias/**"
 	};
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
@@ -51,25 +52,26 @@ public class SercurityConfig extends WebSecurityConfigurerAdapter {
 		}
 		http.cors().and().csrf().disable();
 		http.authorizeRequests()
-			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
-			.antMatchers(PUBLIC_MATCHERS).permitAll()
+		.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
+		.antMatchers(PUBLIC_MATCHERS).permitAll()
 		.anyRequest().authenticated();
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil,userDetailsService));
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
-	
+
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
 	}
-	
+
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
 		return source;
 	}
-	
+
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
